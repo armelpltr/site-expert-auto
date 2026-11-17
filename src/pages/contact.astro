@@ -1,0 +1,172 @@
+---
+import { Phone, Mail, Clock, Info } from '@lucide/astro';
+import Base from '@/layouts/Base.astro';
+import { site, telLien } from '@/config/site';
+import { prestationsVisibles } from '@/lib/prestations';
+
+const formspree = site.formulaire.service === 'formspree';
+const action = formspree ? `https://formspree.io/f/${site.formulaire.formspreeId}` : '/merci';
+const prestations = await prestationsVisibles();
+const typesSinistre = [
+  'Accident',
+  'Vol ou tentative de vol',
+  'Vandalisme',
+  'Incendie',
+  'Bris de glace',
+  'Catastrophe naturelle / grêle',
+  'Litige avec un garage',
+  'Vice caché après achat',
+  'Expertise avant achat',
+  'Autre',
+];
+const aujourdHui = new Date().toISOString().slice(0, 10);
+---
+
+<Base titre="Demander une expertise" description={`Demande d’expertise automobile à ${site.ville} : formulaire, téléphone, e-mail. Devis gratuit.`}>
+  <div class="conteneur pt-12 sm:pt-16">
+    <p class="surtitre">Contact</p>
+    <h1 class="mt-2 text-4xl sm:text-5xl">Demander une expertise</h1>
+    <p class="mt-5 max-w-2xl text-lg text-encre-douce">Décrivez votre situation : je vous recontacte rapidement avec un devis gratuit.</p>
+  </div>
+
+  <div class="conteneur mt-10 grid gap-10 lg:grid-cols-[2fr_1fr]">
+    <form
+      name="demande-expertise"
+      method="POST"
+      action={action}
+      enctype="multipart/form-data"
+      data-netlify={formspree ? undefined : 'true'}
+      netlify-honeypot={formspree ? undefined : 'site-web'}
+      class="carte space-y-8 p-6 sm:p-8"
+    >
+      {!formspree && <input type="hidden" name="form-name" value="demande-expertise" />}
+      <p class="hidden"><label>Ne pas remplir : <input name="site-web" tabindex="-1" autocomplete="off" /></label></p>
+
+      <fieldset class="space-y-5">
+        <legend class="text-lg font-bold text-marine">Vos coordonnées</legend>
+        <div>
+          <label for="nom" class="etiquette">Nom et prénom *</label>
+          <input class="champ" id="nom" name="nom" autocomplete="name" required />
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="telephone" class="etiquette">Téléphone *</label>
+            <input class="champ" id="telephone" name="telephone" type="tel" autocomplete="tel" required />
+          </div>
+          <div>
+            <label for="email" class="etiquette">E-mail *</label>
+            <input class="champ" id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="space-y-5">
+        <legend class="text-lg font-bold text-marine">Votre véhicule et le sinistre</legend>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="immatriculation" class="etiquette">Immatriculation</label>
+            <input class="champ uppercase" id="immatriculation" name="immatriculation" placeholder="AB-123-CD" autocomplete="off" pattern="[A-Za-z]{2}-?[0-9]{3}-?[A-Za-z]{2}|.{4,}" title="Format AB-123-CD (ou ancien format)" />
+          </div>
+          <div>
+            <label for="type" class="etiquette">Type de demande *</label>
+            <select class="champ" id="type" name="type" required>
+              <option value="">Choisir…</option>
+              {typesSinistre.map((t) => <option>{t}</option>)}
+            </select>
+          </div>
+          <div>
+            <label for="assureur" class="etiquette">Votre assureur</label>
+            <input class="champ" id="assureur" name="assureur" autocomplete="off" />
+          </div>
+          <div>
+            <label for="date" class="etiquette">Date du sinistre</label>
+            <input class="champ" id="date" name="date-sinistre" type="date" max={aujourdHui} />
+          </div>
+        </div>
+        <div>
+          <label for="prestation" class="etiquette">Prestation envisagée</label>
+          <select class="champ" id="prestation" name="prestation">
+            <option value="">Je ne sais pas encore</option>
+            {prestations.map((p) => <option>{p.data.titre}</option>)}
+          </select>
+        </div>
+        <div>
+          <label for="photos" class="etiquette">Photos (facultatif)</label>
+          <p id="aide-photos" class="text-sm text-encre-douce">Jusqu’à 5 photos, 8 Mo maximum au total. Formats JPG, PNG ou HEIC.</p>
+          <input
+            class="champ cursor-pointer file:mr-4 file:rounded-md file:border-0 file:bg-marine file:px-4 file:py-2 file:font-semibold file:text-white"
+            id="photos"
+            name="photos"
+            type="file"
+            accept="image/jpeg,image/png,image/heic,image/heif,image/webp"
+            multiple
+            aria-describedby="aide-photos"
+          />
+          <p id="erreur-photos" class="mt-1 hidden text-sm font-semibold text-red-700" role="alert"></p>
+        </div>
+        <div>
+          <label for="message" class="etiquette">Votre message *</label>
+          <textarea class="champ min-h-36 resize-y" id="message" name="message" rows="5" required placeholder="Circonstances, dommages constatés, montant proposé par l’assurance, ce que vous contestez…"></textarea>
+        </div>
+      </fieldset>
+
+      <div class="flex items-start gap-3 text-sm text-encre-douce">
+        <input type="checkbox" id="consentement" name="consentement" required class="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-marine)]" />
+        <label for="consentement">
+          J’accepte que ces informations soient utilisées pour traiter ma demande, conformément à la
+          <a class="lien" href="/confidentialite">politique de confidentialité</a>. *
+        </label>
+      </div>
+      {formspree && <input type="hidden" name="_next" value={new URL('/merci', Astro.site).href} />}
+      <div class="flex flex-wrap items-center gap-4">
+        <button type="submit" class="bouton">Envoyer ma demande</button>
+        <p class="text-sm text-encre-douce">* Champs obligatoires</p>
+      </div>
+    </form>
+
+    <aside class="space-y-5">
+      <div class="rounded-xl bg-marine p-6 text-white">
+        <p class="text-lg font-bold text-white">Une urgence ?</p>
+        <p class="mt-1 text-white/85">Appelez directement :</p>
+        <a href={telLien} class="bouton mt-4 w-full"><Phone size={20} aria-hidden="true" /> {site.contact.telephone}</a>
+      </div>
+      <ul class="carte space-y-4">
+        <li class="flex gap-3">
+          <Mail size={20} class="mt-0.5 shrink-0 text-signal-texte" aria-hidden="true" />
+          <a class="lien break-all" href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+        </li>
+        <li class="flex gap-3">
+          <Clock size={20} class="mt-0.5 shrink-0 text-signal-texte" aria-hidden="true" />
+          <span>{site.horaires.map((h) => `${h.jours} : ${h.heures}`).join(' · ')}</span>
+        </li>
+        <li class="flex gap-3">
+          <Info size={20} class="mt-0.5 shrink-0 text-signal-texte" aria-hidden="true" />
+          <span class="text-sm text-encre-douce">Préparez si possible : carte grise, contrat d’assurance, rapport de l’expert de l’assurance, factures.</span>
+        </li>
+      </ul>
+    </aside>
+  </div>
+</Base>
+
+<script>
+  // Préremplit la prestation depuis une fiche (?prestation=…) et contrôle les photos.
+  const params = new URLSearchParams(location.search);
+  const choix = params.get('prestation');
+  const select = document.querySelector<HTMLSelectElement>('#prestation');
+  if (choix && select && [...select.options].some((o) => o.value === choix)) select.value = choix;
+
+  const photos = document.querySelector<HTMLInputElement>('#photos');
+  const erreur = document.querySelector<HTMLElement>('#erreur-photos');
+  photos?.addEventListener('change', () => {
+    const fichiers = [...(photos.files ?? [])];
+    const total = fichiers.reduce((s, f) => s + f.size, 0);
+    let message = '';
+    if (fichiers.length > 5) message = 'Merci de sélectionner 5 photos au maximum.';
+    else if (total > 8 * 1024 * 1024) message = 'Les photos dépassent 8 Mo au total : réduisez leur nombre ou leur taille.';
+    photos.setCustomValidity(message);
+    if (erreur) {
+      erreur.textContent = message;
+      erreur.classList.toggle('hidden', !message);
+    }
+  });
+</script>

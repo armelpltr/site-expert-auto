@@ -1,0 +1,10 @@
+---
+import Texte from '@/layouts/Texte.astro';
+import { site, telLien } from '@/config/site';
+---
+
+<Texte titre="Demande envoyée" surtitre="Merci">
+  <p>Votre demande a bien été transmise. Je vous recontacte rapidement avec un devis gratuit.</p>
+  <p>Pour une urgence : <a href={telLien}>{site.contact.telephone}</a>.</p>
+  <p><a href="/">Retour à l'accueil</a></p>
+</Texte>
