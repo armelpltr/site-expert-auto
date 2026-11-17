@@ -128,6 +128,15 @@ prestation envisagée (préremplie depuis une fiche prestation), photos (5 max.,
 
 ## Déployer
 
+### GitHub Pages (aperçu en ligne, actif)
+
+Chaque push sur `main` publie le site sur **https://armelpltr.github.io/site-expert-auto/** via
+`.github/workflows/pages.yml`. Le workflow construit le site avec `SITE_URL` et `BASE_PATH`, puis
+`scripts/prefixer-base.mjs` ajoute le sous-dossier `/site-expert-auto/` aux liens internes et aux URL absolues.
+
+Limite : GitHub Pages est un hébergement statique, **le formulaire Netlify Forms n'y fonctionne pas**.
+Pour un formulaire fonctionnel sur Pages, passer sur Formspree (`formulaire.service: 'formspree'`).
+
 Rien n'est déployé. Les configurations sont prêtes :
 
 - **Netlify** (recommandé) : importer le dépôt sur app.netlify.com ; réglages lus dans `netlify.toml`.
