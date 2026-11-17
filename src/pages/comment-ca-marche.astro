@@ -1,0 +1,44 @@
+---
+import { PhoneCall, FileCheck, CalendarCheck, ClipboardList, FileText } from '@lucide/astro';
+import Base from '@/layouts/Base.astro';
+import { site } from '@/config/site';
+
+const etapes = [
+  { Icone: PhoneCall, titre: 'Premier contact', texte: 'Vous m’appelez ou remplissez le formulaire. Nous faisons le point sur votre situation : je vous dis si une expertise est utile.' },
+  { Icone: FileCheck, titre: 'Devis et documents', texte: 'Je vous envoie un devis gratuit. Vous me transmettez les pièces utiles : contrat d’assurance, rapport de l’expert, factures, photos.' },
+  { Icone: CalendarCheck, titre: 'Examen du véhicule', texte: `Je me déplace où se trouve le véhicule (garage, domicile, fourrière) dans un rayon de ${site.zone.rayon}.` },
+  { Icone: ClipboardList, titre: 'Analyse et échanges', texte: 'J’analyse les dommages, chiffre les réparations ou la valeur du véhicule et, si besoin, j’échange avec l’assureur ou le professionnel concerné.' },
+  { Icone: FileText, titre: 'Rapport d’expertise', texte: 'Vous recevez un rapport écrit et argumenté, que vous pouvez utiliser pour une négociation, une réclamation ou une procédure.' },
+];
+---
+
+<Base titre="Comment ça marche" description="Du premier contact au rapport d’expertise : les étapes d’une expertise automobile indépendante.">
+  <div class="conteneur max-w-3xl pt-12 sm:pt-16">
+    <p class="surtitre">Déroulement</p>
+    <h1 class="mt-2 text-4xl sm:text-5xl">Comment ça marche ?</h1>
+    <p class="mt-5 text-lg text-encre-douce">Une démarche simple, en 5 étapes, du premier appel à la remise du rapport.</p>
+
+    <ol class="relative mt-12 space-y-10 border-l-2 border-signal/60 pl-8 sm:pl-10">
+      {
+        etapes.map(({ Icone, titre, texte }, i) => (
+          <li class="relative">
+            <span class="absolute top-0 -left-[3.05rem] grid h-11 w-11 place-items-center rounded-full bg-marine text-signal ring-4 ring-fond sm:-left-[3.55rem]" aria-hidden="true">
+              <Icone size={20} />
+            </span>
+            <p class="text-sm font-bold text-signal-texte">Étape {i + 1}</p>
+            <h2 class="mt-1 text-2xl">{titre}</h2>
+            <p class="mt-2 text-encre-douce">{texte}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <p class="mt-12 rounded-xl bg-marine-clair p-5 text-sm text-encre-douce">
+      [Délai moyen entre le premier contact et la remise du rapport : à préciser par l’expert.]
+    </p>
+    <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+      <a href="/contact" class="bouton">Demander une expertise</a>
+      <a href="/tarifs" class="bouton-contour">Voir les tarifs</a>
+    </div>
+  </div>
+</Base>

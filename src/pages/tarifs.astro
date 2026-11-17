@@ -1,0 +1,53 @@
+---
+import { Check, Receipt } from '@lucide/astro';
+import Base from '@/layouts/Base.astro';
+import { site } from '@/config/site';
+---
+
+<Base titre="Tarifs" description={`Forfaits indicatifs d’expertise automobile à ${site.ville}. Devis gratuit et sans engagement.`}>
+  <div class="conteneur pt-12 sm:pt-16">
+    <p class="surtitre">Tarifs</p>
+    <h1 class="mt-2 text-4xl sm:text-5xl">Des tarifs clairs</h1>
+    <p class="mt-5 max-w-2xl text-lg text-encre-douce">
+      Forfaits indicatifs. Le prix exact dépend de votre dossier : il vous est communiqué dans un
+      <strong class="text-encre">devis gratuit</strong>, avant toute intervention.
+    </p>
+  </div>
+
+  <ul class="conteneur mt-10 grid gap-5 sm:grid-cols-2">
+    {
+      site.tarifs.map((t) => (
+        <li class="carte flex flex-col">
+          <h2 class="text-xl">{t.nom}</h2>
+          <p class="mt-3 text-2xl font-extrabold text-marine">{t.prix}</p>
+          <p class="mt-3 text-encre-douce">{t.detail}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="conteneur mt-10 grid gap-5 lg:grid-cols-2">
+    <section class="rounded-xl bg-marine p-7 text-white">
+      <h2 class="flex items-center gap-2 text-xl text-white">
+        <Receipt size={22} class="text-signal" aria-hidden="true" /> Devis gratuit
+      </h2>
+      <ul class="mt-4 space-y-2 text-white/90">
+        <li class="flex gap-2"><Check size={20} class="mt-0.5 shrink-0 text-signal" aria-hidden="true" /> Premier échange téléphonique offert</li>
+        <li class="flex gap-2"><Check size={20} class="mt-0.5 shrink-0 text-signal" aria-hidden="true" /> Devis écrit avant toute intervention</li>
+        <li class="flex gap-2"><Check size={20} class="mt-0.5 shrink-0 text-signal" aria-hidden="true" /> Aucun frais si vous ne donnez pas suite</li>
+      </ul>
+      <a href="/contact" class="bouton mt-6">Demander un devis</a>
+    </section>
+    <section class="carte">
+      <h2 class="text-xl">Bon à savoir</h2>
+      <ul class="mt-4 space-y-3 text-encre-douce">
+        <li><strong class="text-encre">Déplacement :</strong> {site.fraisDeplacement}</li>
+        <li>
+          <strong class="text-encre">Prise en charge :</strong> [À valider : selon votre contrat, les honoraires peuvent être
+          pris en charge par une garantie « protection juridique » ou « défense recours ». Vérifiez vos conditions générales.]
+        </li>
+        <li><strong class="text-encre">Paiement :</strong> [Moyens de paiement acceptés, paiement en plusieurs fois éventuel.]</li>
+      </ul>
+    </section>
+  </div>
+</Base>
