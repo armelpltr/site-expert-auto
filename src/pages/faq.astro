@@ -1,0 +1,49 @@
+---
+import { Plus } from '@lucide/astro';
+import Base from '@/layouts/Base.astro';
+import { faqJsonLd } from '@/lib/jsonld';
+
+// IMPORTANT : réponses à faire valider par l'expert avant publication.
+// Aucune affirmation juridique ne doit être publiée sans cette validation.
+const questions = [
+  { q: 'Puis-je choisir mon expert ?', r: '[Réponse à valider par l’expert : cas de la contre-expertise, de l’expertise contradictoire, et ce que prévoit généralement le contrat d’assurance.]' },
+  { q: 'Qui paie l’expertise ?', r: '[Réponse à valider par l’expert : honoraires à la charge du demandeur, prise en charge possible par une garantie protection juridique ou défense recours selon le contrat.]' },
+  { q: 'Que faire si je conteste le rapport de l’expert de l’assurance ?', r: '[Réponse à valider par l’expert : démarches, contre-expertise, expertise contradictoire, tierce expertise, délais.]' },
+  { q: 'Combien de temps dure une expertise ?', r: '[À préciser : durée de l’examen du véhicule et délai de remise du rapport.]' },
+  { q: 'Faut-il que le véhicule soit déplacé ?', r: '[À préciser : en principe, l’expert se déplace là où se trouve le véhicule, dans sa zone d’intervention.]' },
+  { q: 'Quels documents dois-je préparer ?', r: '[À valider : carte grise, contrat et conditions générales d’assurance, rapport de l’expert de l’assurance, factures, constat amiable, photos.]' },
+  { q: 'Mon véhicule est classé VEI ou VGE : que se passe-t-il ?', r: '[Réponse à valider par l’expert : différence entre VEI et VGE, options possibles, rôle de l’expert dans la procédure.]' },
+  { q: 'Le devis est-il vraiment gratuit ?', r: '[À valider :] Oui, le premier échange et le devis sont gratuits et sans engagement.' },
+];
+---
+
+<Base titre="Questions fréquentes" description="Choix de l’expert, prise en charge des honoraires, contestation du rapport de l’assureur, VEI / VGE : les réponses aux questions fréquentes." jsonLd={faqJsonLd(questions)}>
+  <div class="conteneur max-w-3xl pt-12 sm:pt-16">
+    <p class="surtitre">FAQ</p>
+    <h1 class="mt-2 text-4xl sm:text-5xl">Questions fréquentes</h1>
+    <div class="mt-10 space-y-3">
+      {
+        questions.map(({ q, r }) => (
+          <details class="faq group rounded-xl border border-trait bg-white open:border-signal">
+            <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 rounded-xl px-5 py-4 font-bold text-marine hover:bg-marine-clair/60">
+              <span>{q}</span>
+              <Plus size={22} class="shrink-0 text-signal-texte transition-transform duration-300 group-open:rotate-45" aria-hidden="true" />
+            </summary>
+            <div class="px-5 pb-5 text-encre-douce">
+              <p>{r}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+    <p class="mt-12 text-encre-douce">
+      Une autre question ? <a class="lien" href="/contact">Contactez-moi</a>, la réponse est gratuite.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+</style>
