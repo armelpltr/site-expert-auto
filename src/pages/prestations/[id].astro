@@ -1,0 +1,68 @@
+---
+import { render } from 'astro:content';
+import { Phone, ArrowLeft } from '@lucide/astro';
+import Base from '@/layouts/Base.astro';
+import IconePrestation from '@/components/IconePrestation.astro';
+import { site, telLien } from '@/config/site';
+import { prestationsVisibles, type Prestation } from '@/lib/prestations';
+import { serviceJsonLd } from '@/lib/jsonld';
+
+export async function getStaticPaths() {
+  const prestations = await prestationsVisibles();
+  return prestations.map((prestation) => ({
+    params: { id: prestation.id },
+    props: { prestation, autres: prestations.filter((p) => p.id !== prestation.id) },
+  }));
+}
+
+interface Props {
+  prestation: Prestation;
+  autres: Prestation[];
+}
+const { prestation, autres } = Astro.props;
+const d = prestation.data;
+const { Content } = await render(prestation);
+const url = new URL(`/prestations/${prestation.id}`, Astro.site).href;
+---
+
+<Base titre={d.titre} description={d.resume} jsonLd={serviceJsonLd({ nom: d.titre, description: d.resume, url }, Astro.site)}>
+  <div class="conteneur grid gap-12 pt-10 sm:pt-14 lg:grid-cols-[2fr_1fr]">
+    <article>
+      <a href="/prestations" class="inline-flex items-center gap-1 text-sm font-semibold text-marine-2 hover:underline">
+        <ArrowLeft size={16} aria-hidden="true" /> Toutes les prestations
+      </a>
+      <span class="mt-8 grid h-14 w-14 place-items-center rounded-xl bg-marine text-signal">
+        <IconePrestation nom={d.icone} size={28} />
+      </span>
+      <h1 class="mt-5 text-3xl sm:text-5xl">{d.titre}</h1>
+      <p class="mt-4 text-lg text-encre-douce">{d.resume}</p>
+      <div class="prose prose-slate mt-8 max-w-none prose-headings:text-marine prose-li:marker:text-signal-texte">
+        <Content />
+      </div>
+    </article>
+
+    <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start">
+      <div class="rounded-xl bg-marine p-6 text-white">
+        <p class="text-lg font-bold text-white">Votre situation ressemble à ça ?</p>
+        <p class="mt-2 text-white/85">Devis gratuit, réponse rapide.</p>
+        <a href={`/contact?prestation=${encodeURIComponent(d.titre)}`} class="bouton mt-5 w-full">Demander une expertise</a>
+        <a href={telLien} class="bouton-clair mt-3 w-full"><Phone size={18} aria-hidden="true" /> {site.contact.telephone}</a>
+      </div>
+      <div>
+        <h2 class="text-sm font-bold tracking-wider text-encre-douce uppercase">Autres prestations</h2>
+        <ul class="mt-3 space-y-1">
+          {
+            autres.map((p) => (
+              <li>
+                <a href={`/prestations/${p.id}`} class="flex items-center gap-3 rounded-lg p-3 font-semibold hover:bg-marine-clair">
+                  <IconePrestation nom={p.data.icone} size={20} class="shrink-0 text-signal-texte" />
+                  {p.data.titre}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </aside>
+  </div>
+</Base>
