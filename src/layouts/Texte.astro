@@ -1,0 +1,20 @@
+---
+import Base from '@/layouts/Base.astro';
+
+interface Props {
+  titre: string;
+  description?: string;
+  surtitre?: string;
+}
+const { titre, description, surtitre } = Astro.props;
+---
+
+<Base titre={titre} description={description}>
+  <article class="conteneur max-w-3xl pt-12 sm:pt-16">
+    {surtitre && <p class="surtitre">{surtitre}</p>}
+    <h1 class="mt-2 text-4xl sm:text-5xl">{titre}</h1>
+    <div class="prose prose-slate mt-10 max-w-none prose-headings:text-marine prose-a:text-marine-2">
+      <slot />
+    </div>
+  </article>
+</Base>

@@ -1,0 +1,55 @@
+---
+import Texte from '@/layouts/Texte.astro';
+import { site } from '@/config/site';
+const l = site.legal;
+const prestataire =
+  site.formulaire.service === 'formspree'
+    ? 'Formspree, Inc. (États-Unis), dans le cadre des clauses contractuelles types de la Commission européenne'
+    : 'Netlify, Inc. (États-Unis), dans le cadre des clauses contractuelles types de la Commission européenne';
+---
+
+<Texte titre="Politique de confidentialité" surtitre="RGPD" description="Comment sont traitées vos données personnelles.">
+  <p><em>Modèle à faire relire et compléter avant la mise en ligne. Les éléments entre crochets sont des placeholders.</em></p>
+
+  <h2>Responsable du traitement</h2>
+  <p>{l.editeur}, {site.contact.adresse}, {site.contact.codePostal} {site.ville}. Contact : <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>.</p>
+
+  <h2>Données collectées</h2>
+  <p>
+    Via le formulaire de demande d’expertise : nom, téléphone, e-mail, immatriculation, type de sinistre, assureur, date
+    du sinistre, photos éventuelles et message.
+  </p>
+
+  <h2>Finalités et base légale</h2>
+  <p>
+    Ces données servent à étudier votre demande, vous recontacter et établir un devis (base légale : mesures
+    précontractuelles prises à votre demande et votre consentement, article 6.1 a et b du RGPD). Si une mission est
+    confiée, elles sont utilisées pour la réaliser (exécution du contrat) et conservées selon les obligations légales
+    et comptables.
+  </p>
+
+  <h2>Destinataires</h2>
+  <p>
+    Seul {site.nom} a accès à vos données. Elles transitent par {prestataire}. Le site est hébergé par {l.hebergeur}.
+    Dans le cadre d’une mission, certaines informations peuvent être communiquées, avec votre accord, aux parties
+    concernées (assureur, garage, autre expert).
+  </p>
+
+  <h2>Durée de conservation</h2>
+  <p>Demandes sans suite : [12 mois]. Dossiers d’expertise : [durée à préciser par l’expert, selon ses obligations professionnelles].</p>
+
+  <h2>Cookies</h2>
+  <p>
+    Ce site ne dépose aucun cookie publicitaire et n’utilise aucun outil de mesure d’audience. La carte de la zone
+    d’intervention est fournie par OpenStreetMap.
+  </p>
+
+  <h2>Vos droits</h2>
+  <p>
+    Vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation, d’opposition et de portabilité de
+    vos données. Pour les exercer : <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>. Vous pouvez
+    aussi introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>).
+  </p>
+
+  <p><small>Dernière mise à jour : {l.misAJour}.</small></p>
+</Texte>
