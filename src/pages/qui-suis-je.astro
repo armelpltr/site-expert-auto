@@ -1,0 +1,124 @@
+---
+import { Picture } from 'astro:assets';
+import { ShieldCheck, Award, MapPin, Clock } from '@lucide/astro';
+import Base from '@/layouts/Base.astro';
+import { site } from '@/config/site';
+import { phrasePositionnement } from '@/lib/prestations';
+import portrait from '@/assets/portrait.jpg';
+import expertise from '@/assets/expertise.jpg';
+
+const chiffres = [
+  { valeur: site.experience.annees, libelle: 'années d’expérience' },
+  { valeur: site.experience.expertisesRealisees, libelle: 'expertises réalisées' },
+  { valeur: site.experience.delaiIntervention, libelle: 'délai d’intervention' },
+];
+const parcours = [
+  ['[Année]', '[Diplôme d’expert en automobile (DEA) / formation initiale]'],
+  ['[Année]', '[Expérience en cabinet d’expertise X, Y années]'],
+  ['[Année]', '[Qualification VE (véhicules endommagés)]'],
+  ['[Année]', '[Installation à mon compte à VILLE]'],
+];
+---
+
+<Base titre="Qui suis-je" description={`${site.nom}, expert automobile indépendant à ${site.ville} : parcours, agrément, zone d’intervention.`}>
+  <section class="conteneur grid gap-10 pt-12 sm:pt-16 md:grid-cols-[2fr_3fr] md:gap-14">
+    <Picture
+      src={portrait}
+      alt={`Portrait de ${site.nom} (photo à fournir)`}
+      widths={[400, 700, 1000]}
+      sizes="(min-width: 768px) 40vw, 100vw"
+      formats={['avif', 'webp']}
+      loading="eager"
+      class="aspect-[4/5] w-full rounded-2xl object-cover"
+    />
+    <div>
+      <p class="surtitre">Qui suis-je</p>
+      <h1 class="mt-2 text-4xl sm:text-5xl">{site.nom}</h1>
+      <p class="mt-2 text-lg font-semibold text-encre-douce">{site.metier} à {site.ville}</p>
+      <div class="prose prose-slate mt-6 max-w-none">
+        <p>
+          [Présentation à la première personne : parcours dans l’automobile, années en cabinet d’expertise, pourquoi
+          s’installer à son compte. Trois ou quatre phrases.]
+        </p>
+        <p>{phrasePositionnement()}</p>
+      </div>
+      <dl class="mt-8 grid grid-cols-3 gap-3">
+        {
+          chiffres.map((c) => (
+            <div class="flex flex-col-reverse rounded-xl bg-marine-clair p-4 text-center">
+              <dt class="text-xs text-encre-douce sm:text-sm">{c.libelle}</dt>
+              <dd class="text-2xl font-extrabold text-marine sm:text-3xl">{c.valeur}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="conteneur mt-20 grid gap-10 lg:grid-cols-2">
+    <div>
+      <h2 class="text-3xl">Parcours</h2>
+      <ol class="mt-6 space-y-3">
+        {
+          parcours.map(([annee, texte]) => (
+            <li class="grid grid-cols-[4.5rem_1fr] gap-4 border-b border-trait pb-3">
+              <span class="font-bold text-signal-texte">{annee}</span>
+              <span>{texte}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+    <div>
+      <h2 class="text-3xl">Agrément et garanties</h2>
+      <ul class="mt-6 space-y-4">
+        <li class="carte flex gap-4 p-5">
+          <ShieldCheck size={24} class="shrink-0 text-signal-texte" aria-hidden="true" />
+          <div>
+            <p class="font-bold">Inscrit sur la liste nationale des experts en automobile</p>
+            <p class="text-sm text-encre-douce">N° {site.reglementaire.numeroListeNationale}</p>
+          </div>
+        </li>
+        <li class="carte flex gap-4 p-5">
+          <Award size={24} class="shrink-0 text-signal-texte" aria-hidden="true" />
+          <div>
+            <p class="font-bold">Qualification véhicules endommagés</p>
+            <p class="text-sm text-encre-douce">{site.reglementaire.qualificationVE}</p>
+          </div>
+        </li>
+        <li class="carte flex gap-4 p-5">
+          <ShieldCheck size={24} class="shrink-0 text-signal-texte" aria-hidden="true" />
+          <div>
+            <p class="font-bold">Assurance responsabilité civile professionnelle</p>
+            <p class="text-sm text-encre-douce">{site.reglementaire.assuranceRcPro}</p>
+          </div>
+        </li>
+        <li class="carte flex gap-4 p-5">
+          <MapPin size={24} class="shrink-0 text-signal-texte" aria-hidden="true" />
+          <div>
+            <p class="font-bold">Zone d’intervention</p>
+            <p class="text-sm text-encre-douce">{site.zone.rayon} · <a class="lien" href="/zone-intervention">voir les villes</a></p>
+          </div>
+        </li>
+        <li class="carte flex gap-4 p-5">
+          <Clock size={24} class="shrink-0 text-signal-texte" aria-hidden="true" />
+          <div>
+            <p class="font-bold">Horaires</p>
+            <p class="text-sm text-encre-douce">{site.horaires.map((h) => `${h.jours} : ${h.heures}`).join(' · ')}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <figure class="conteneur mt-20">
+    <Picture
+      src={expertise}
+      alt="Illustration : véhicule examiné et fiche de constat (visuel provisoire)"
+      widths={[640, 1000, 1400]}
+      sizes="(min-width: 1152px) 1100px, 100vw"
+      formats={['avif', 'webp']}
+      class="aspect-[16/7] w-full rounded-2xl object-cover"
+    />
+  </figure>
+</Base>
