@@ -1,0 +1,100 @@
+---
+import { Phone, ShieldCheck, Menu } from '@lucide/astro';
+import { site, navigation, telLien } from '@/config/site';
+
+const chemin = Astro.url.pathname.replace(/\/$/, '') || '/';
+const actif = (href: string) => chemin === href || chemin.startsWith(href + '/');
+---
+
+<div class="hidden bg-marine text-sm text-white/90 md:block">
+  <div class="conteneur flex h-9 items-center justify-between gap-6">
+    <p class="flex min-w-0 items-center gap-2">
+      <ShieldCheck size={16} class="shrink-0 text-signal" aria-hidden="true" />
+      <span class="truncate">Inscrit sur la liste nationale des experts en automobile · n° {site.reglementaire.numeroListeNationale}</span>
+    </p>
+    <p class="flex shrink-0 items-center gap-4 whitespace-nowrap">
+      <span class="hidden lg:inline">Devis gratuit · Intervention sous {site.experience.delaiIntervention}</span>
+      <a href={telLien} class="inline-flex items-center gap-1.5 font-bold text-white hover:text-signal">
+        <Phone size={15} aria-hidden="true" />
+        {site.contact.telephone}
+      </a>
+    </p>
+  </div>
+</div>
+
+<header class="sticky top-0 z-40 border-b border-trait bg-white/95 backdrop-blur">
+  <div class="conteneur flex h-16 items-center justify-between gap-4 md:h-20">
+    <a href="/" class="flex items-center gap-3">
+      <span class="grid h-10 w-10 place-items-center rounded-lg bg-marine font-extrabold text-signal" aria-hidden="true">EA</span>
+      <span class="leading-tight">
+        <span class="block max-w-[15rem] font-extrabold text-marine">{site.enseigne}</span>
+        <span class="block text-xs text-encre-douce">{site.metier} · {site.ville}</span>
+      </span>
+    </a>
+
+    <nav aria-label="Navigation principale" class="hidden lg:block">
+      <ul class="flex items-center gap-5 text-[0.95rem] font-semibold whitespace-nowrap">
+        {
+          navigation.map((n) => (
+            <li>
+              <a
+                href={n.href}
+                aria-current={actif(n.href) ? 'page' : undefined}
+                class:list={[
+                  'border-b-2 py-2 transition-colors hover:text-marine',
+                  actif(n.href) ? 'border-signal text-marine' : 'border-transparent text-encre-douce',
+                ]}
+              >
+                {n.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="/contact" class="bouton hidden min-h-11 px-5 py-2 text-sm whitespace-nowrap md:inline-flex">Demander une expertise</a>
+      <details class="menu-mobile relative lg:hidden">
+        <summary class="grid h-11 w-11 cursor-pointer list-none place-items-center rounded-lg hover:bg-marine-clair" aria-label="Menu">
+          <Menu size={24} aria-hidden="true" />
+        </summary>
+        <nav aria-label="Navigation mobile" class="absolute top-13 right-0 w-64 rounded-xl border border-trait bg-white p-2 shadow-xl">
+          <ul class="font-semibold">
+            {
+              navigation.map((n) => (
+                <li>
+                  <a href={n.href} aria-current={actif(n.href) ? 'page' : undefined} class="block rounded-lg px-4 py-3 hover:bg-marine-clair aria-[current=page]:text-signal-texte">
+                    {n.label}
+                  </a>
+                </li>
+              ))
+            }
+            <li class="mt-1 border-t border-trait pt-1">
+              <a href="/contact" class="block rounded-lg px-4 py-3 text-signal-texte hover:bg-marine-clair">Demander une expertise</a>
+            </li>
+          </ul>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .menu-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+</style>
+
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('.menu-mobile');
+  menu?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu.open) {
+      menu.open = false;
+      menu.querySelector('summary')?.focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (menu?.open && !menu.contains(e.target as Node)) menu.open = false;
+  });
+</script>

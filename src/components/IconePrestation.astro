@@ -1,0 +1,21 @@
+---
+import { CarFront, Scale, Wrench, SearchCheck, Gauge, Gavel } from '@lucide/astro';
+
+interface Props {
+  nom: 'car-crash' | 'scale' | 'wrench' | 'search-check' | 'gauge' | 'gavel';
+  size?: number;
+  class?: string;
+}
+const { nom, size = 26, class: classe } = Astro.props;
+const icones = {
+  'car-crash': CarFront,
+  scale: Scale,
+  wrench: Wrench,
+  'search-check': SearchCheck,
+  gauge: Gauge,
+  gavel: Gavel,
+};
+const Icone = icones[nom];
+---
+
+<Icone size={size} class={classe} aria-hidden="true" />

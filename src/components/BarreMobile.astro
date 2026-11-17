@@ -1,0 +1,16 @@
+---
+/** Barre d'action fixe en bas d'écran sur mobile : Appeler / Devis. */
+import { Phone, FileText } from '@lucide/astro';
+import { telLien } from '@/config/site';
+---
+
+<nav aria-label="Actions rapides" class="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 border-t border-marine-2 bg-marine shadow-[0_-4px_16px_rgb(0_0_0/0.15)] md:hidden" style="padding-bottom: env(safe-area-inset-bottom)">
+  <a href={telLien} class="flex h-[4.5rem] items-center justify-center gap-2 font-bold text-white active:bg-marine-2">
+    <Phone size={22} aria-hidden="true" />
+    Appeler
+  </a>
+  <a href="/contact" class="flex h-[4.5rem] items-center justify-center gap-2 bg-signal font-bold text-marine active:bg-signal-fonce">
+    <FileText size={22} aria-hidden="true" />
+    Devis gratuit
+  </a>
+</nav>

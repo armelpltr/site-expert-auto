@@ -1,0 +1,62 @@
+---
+import '@/styles/global.css';
+import Entete from '@/components/Entete.astro';
+import Pied from '@/components/Pied.astro';
+import BarreMobile from '@/components/BarreMobile.astro';
+import { site } from '@/config/site';
+
+interface Props {
+  titre?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { titre, description = site.description, image = '/og-expert-auto.jpg', imageAlt, jsonLd } = Astro.props;
+const suffixe = `${site.metier} à ${site.ville}`;
+const titreComplet = titre ? `${titre} · ${suffixe}` : `${site.enseigne} · ${suffixe}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const blocs = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titreComplet}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#14213d" />
+    <meta name="format-detection" content="telephone=yes" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={site.enseigne} />
+    <meta property="og:title" content={titreComplet} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, Astro.site).href} />
+    {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {blocs.map((b) => <script is:inline type="application/ld+json" set:html={JSON.stringify(b)} />)}
+  </head>
+  <body class="flex min-h-dvh flex-col pb-[4.5rem] md:pb-0">
+    <a
+      href="#contenu"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-lg focus:bg-white focus:px-5 focus:py-3 focus:font-bold"
+    >
+      Aller au contenu
+    </a>
+    <Entete />
+    <main id="contenu" class="flex-1">
+      <slot />
+    </main>
+    <Pied />
+    <BarreMobile />
+  </body>
+</html>
